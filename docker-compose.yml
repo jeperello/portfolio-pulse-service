@@ -1,0 +1,34 @@
+services:
+  mongodb:
+    # Imagen oficial (reemplaza bitnami/mongodb)
+    image: mongo:7.0
+    container_name: pulse-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=portfolio
+      # En la imagen oficial, para permitir sin password no se usa variable,
+      # por defecto viene abierto si no configuras auth.
+
+  zookeeper:
+    # Imagen oficial (reemplaza bitnami/zookeeper)
+    image: zookeeper:3.9
+    container_name: pulse-zookeeper
+    ports:
+      - "2181:2181"
+    # La imagen oficial no requiere ALLOW_ANONYMOUS_LOGIN por defecto
+
+  kafka:
+    # Imagen oficial de Apache (reemplaza bitnami/kafka)
+    image: apache/kafka:3.7.0
+    container_name: pulse-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      # Variables para la imagen oficial de Apache
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    depends_on:
+      - zookeeper
