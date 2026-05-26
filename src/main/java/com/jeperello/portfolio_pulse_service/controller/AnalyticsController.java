@@ -20,7 +20,6 @@ public class AnalyticsController {
     public ResponseEntity<String> receiveEvent(@Valid @RequestBody AnalyticsEventDTO event) {
         log.info("Evento recibido: {} desde la sesión: {}", event.getEventType(), event.getSessionId());
         analyticsService.processEvent(event);
-        // El siguiente paso será llamar al Service que enviará a Kafka
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Evento encolado correctamente");
     }
 }
