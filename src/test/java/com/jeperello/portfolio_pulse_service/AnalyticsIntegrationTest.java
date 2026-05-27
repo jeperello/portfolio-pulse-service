@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
@@ -16,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+// Agregamos esta línea para simular Kafka en los tests
+@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
 class AnalyticsIntegrationTest {
 
     @Autowired
@@ -42,7 +45,6 @@ class AnalyticsIntegrationTest {
 
     @Test
     void whenInvalidEvent_thenReturns400() throws Exception {
-        // Evento sin eventType (campo obligatorio)
         AnalyticsEventDTO invalidEvent = AnalyticsEventDTO.builder()
                 .componentId("test-button")
                 .build();
