@@ -1,0 +1,40 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      # Levantamos MongoDB para que los tests de integración pasen
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        # Ejecutamos el empaquetado.
+        # Por ahora, si no tienes tests escritos, pasará el build rápido.
+        run: mvn -B package --file pom.xml
+
+      - name: Upload Artifact
+        # Guardamos el .jar generado por si queremos descargarlo después
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-pulse-service-jar
+          path: target/*.jar
