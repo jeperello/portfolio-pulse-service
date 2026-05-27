@@ -1,6 +1,7 @@
 package com.jeperello.portfolio_pulse_service.controller;
 
 import com.jeperello.portfolio_pulse_service.dto.AnalyticsEventDTO;
+import com.jeperello.portfolio_pulse_service.dto.StatsResponseDTO;
 import com.jeperello.portfolio_pulse_service.service.AnalyticsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,10 @@ public class AnalyticsController {
         log.info("Evento recibido: {} desde la sesión: {}", event.getEventType(), event.getSessionId());
         analyticsService.processEvent(event);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Evento encolado correctamente");
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<StatsResponseDTO> getStats() {
+        return ResponseEntity.ok(analyticsService.getStats());
     }
 }

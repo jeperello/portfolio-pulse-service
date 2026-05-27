@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,5 +54,12 @@ class AnalyticsIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidEvent)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenGetStats_thenReturnsOk() throws Exception {
+        mockMvc.perform(get("/api/v1/events/stats")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
