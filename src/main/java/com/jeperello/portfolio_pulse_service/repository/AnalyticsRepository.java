@@ -13,7 +13,13 @@ public interface AnalyticsRepository extends MongoRepository<AnalyticsEvent, Str
     // Obtenemos los últimos 10 eventos
     List<AnalyticsEvent> findTop10ByOrderByTimestampDesc();
 
+    // Para los últimos eventos de una sesión específica
+    List<AnalyticsEvent> findTop10BySessionIdOrderByTimestampDesc(String sessionId);
+
     // Contar sesiones únicas
     @Aggregation(pipeline = { "{ '$group': { '_id': '$sessionId' } }", "{ '$count': 'total' }" })
     Long countDistinctSessionId();
+
+    // Para el filtrado opcional
+    List<AnalyticsEvent> findBySessionId(String sessionId);
 }

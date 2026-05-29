@@ -62,4 +62,13 @@ class AnalyticsIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void whenGetStatsWithSessionId_thenReturnsFilteredOk() throws Exception {
+        mockMvc.perform(get("/api/v1/events/stats")
+                        .param("sessionId", "test-session-123")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

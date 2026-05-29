@@ -25,7 +25,8 @@ public class AnalyticsController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<StatsResponseDTO> getStats() {
-        return ResponseEntity.ok(analyticsService.getStats());
+    public ResponseEntity<StatsResponseDTO> getStats(
+            @RequestParam(required = false) String sessionId) {
+        return ResponseEntity.ok(analyticsService.getStats(sessionId));
     }
 }
