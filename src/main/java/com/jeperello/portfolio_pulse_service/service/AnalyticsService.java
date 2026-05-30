@@ -1,6 +1,7 @@
 package com.jeperello.portfolio_pulse_service.service;
 
 import com.jeperello.portfolio_pulse_service.dto.AnalyticsEventDTO;
+import com.jeperello.portfolio_pulse_service.dto.SessionResumenDTO;
 import com.jeperello.portfolio_pulse_service.dto.StatsResponseDTO;
 import com.jeperello.portfolio_pulse_service.model.AnalyticsEvent;
 import com.jeperello.portfolio_pulse_service.producer.AnalyticsProducer;
@@ -58,5 +59,32 @@ public class AnalyticsService {
                 .lastEvents(lastEvents)
                 .build();
     }
+
+    public List<SessionResumenDTO> getSessionsSummary() {
+        List<AnalyticsEvent> allEvents = repository.findAll();
+
+        return allEvents.stream()
+                .collect(Collectors.groupingBy(AnalyticsEvent::getSessionId))
+                .entrySet().stream()
+                .map(entry -> {
+                    String sid = entry.getKey();
+                    List<AnalyticsEvent> sessionEvents = entry.getValue();
+
+                    // Intentamos extraer el browser de la metadata del primer evento de la sesión
+                    String browser = "Unknown";
+                    if (!sessionEvents.isEmpty() && sessionEvents.get(0).getMetadata() != null) {
+                        Object b = sessionEvents.get(0).getMetadata().get("browser");
+                        if (b != null) browser = b.toString();
+                    }
+
+                    return SessionResumenDTO.builder()
+                            .sessionId(sid)
+                            .browser(browser)
+                            .eventCount(sessionEvents.size())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }

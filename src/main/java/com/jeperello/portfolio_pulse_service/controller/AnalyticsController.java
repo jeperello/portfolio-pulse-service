@@ -1,6 +1,7 @@
 package com.jeperello.portfolio_pulse_service.controller;
 
 import com.jeperello.portfolio_pulse_service.dto.AnalyticsEventDTO;
+import com.jeperello.portfolio_pulse_service.dto.SessionResumenDTO;
 import com.jeperello.portfolio_pulse_service.dto.StatsResponseDTO;
 import com.jeperello.portfolio_pulse_service.service.AnalyticsService;
 import jakarta.validation.Valid;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -29,4 +32,10 @@ public class AnalyticsController {
             @RequestParam(required = false) String sessionId) {
         return ResponseEntity.ok(analyticsService.getStats(sessionId));
     }
+
+    @GetMapping("/sessions")
+    public ResponseEntity<List<SessionResumenDTO>> getSessions() {
+        return ResponseEntity.ok(analyticsService.getSessionsSummary());
+    }
+
 }

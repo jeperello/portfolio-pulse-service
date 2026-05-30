@@ -71,4 +71,11 @@ class AnalyticsIntegrationTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void whenGetSessions_thenReturnsListOk() throws Exception {
+        mockMvc.perform(get("/api/v1/events/sessions")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }
