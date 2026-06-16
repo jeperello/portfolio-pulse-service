@@ -2,7 +2,16 @@ spring:
   application:
     name: portfolio-pulse-service
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_SERVER:localhost:9092}
+    # Configuración de Seguridad Dinámica
+    properties:
+      security.protocol: ${KAFKA_PROTOCOL:PLAINTEXT}
+      ssl.truststore.type: PEM
+      ssl.truststore.certificates: ${KAFKA_CA_CERT:none}
+      sasl:
+        mechanism: SCRAM-SHA-256
+        jaas.config: ${KAFKA_JAAS_CONFIG:org.apache.kafka.common.security.scram.ScramLoginModule required;}
+        # Nota: Dejamos el jaas.config preparado para recibir las credenciales en producción
     consumer:
       group-id: portfolio-group
       auto-offset-reset: earliest
@@ -13,7 +22,6 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
   data:
     mongodb:
-      uri: mongodb://localhost:27017/portfolio_analytics
+      uri: ${MONGO_URI:mongodb://localhost:27017/portfolio_analytics}
