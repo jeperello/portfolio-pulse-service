@@ -5,7 +5,6 @@ RUN mvn clean package -DskipTests
 
 # Etapa 2: Runtime ligero
 FROM eclipse-temurin:21-jre-alpine
-WORKDIR /app
 COPY --from=build /target/*.jar app.jar
 
 # Exponemos el puerto 8080
