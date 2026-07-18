@@ -17,12 +17,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyticsService {
-    private final AnalyticsProducer eventProducer;
+    // private final AnalyticsProducer eventProducer;
     private final AnalyticsRepository repository;
 
-    public void processEvent(AnalyticsEventDTO event) {
-        log.debug("Procesando evento para enviar a Kafka: {}", event.getEventType());
-        eventProducer.sendEvent(event);
+    public void processEvent(AnalyticsEventDTO eventDTO) {
+        log.debug("Guardando evento directamente en la BD (Kafka deshabilitado): {}", eventDTO.getEventType());
+        com.jeperello.portfolio_pulse_service.model.AnalyticsEvent event = com.jeperello.portfolio_pulse_service.model.AnalyticsEvent.builder()
+                .eventType(eventDTO.getEventType())
+                .componentId(eventDTO.getComponentId())
+                .metadata(eventDTO.getMetadata())
+                .timestamp(eventDTO.getTimestamp())
+                .sessionId(eventDTO.getSessionId())
+                .build();
+        repository.save(event);
     }
 
     public StatsResponseDTO getStats(String sessionId) {
